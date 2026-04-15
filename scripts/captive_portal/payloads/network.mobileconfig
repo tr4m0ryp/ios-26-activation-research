@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>PayloadContent</key>
+	<array>
+		<dict>
+			<key>PayloadContent</key>
+			<data>
+			LS0tLS1CRUdJTiBDRVJUSUZJQ0FURS0tLS0tCk1JSURYekNDQWtl
+			Z0F3SUJBZ0lVVk9LRVNrSzhPMjM4b2c3bjNTVzl5RGtaUjl3d0RR
+			WUpLb1pJaHZjTkFRRUwKQlFBd1B6RWNNQm9HQTFVRUF3d1RUbVYw
+			ZDI5eWF5QlRaV04xY21sMGVTQkRRVEVTTUJBR0ExVUVDZ3dKVjJs
+			RwphU0JCZFhSb01Rc3dDUVlEVlFRR0V3SlZVekFlRncweU5qQTBN
+			RFV5TURBME1EVmFGdzB6TmpBME1ESXlNREEwCk1EVmFNRDh4SERB
+			YUJnTlZCQU1NRTA1bGRIZHZjbXNnVTJWamRYSnBkSGtnUTBFeEVq
+			QVFCZ05WQkFvTUNWZHAKUm1rZ1FYVjBhREVMTUFrR0ExVUVCaE1D
+			VlZNd2dnRWlNQTBHQ1NxR1NJYjNEUUVCQVFVQUE0SUJEd0F3Z2dF
+			SwpBb0lCQVFEQlBmbXNjZ09nTXNpZHgzWmIwOUhwV0V6ZzdkcFZN
+			eW9vc29tRTZjVHRTbGNJWkVqbUdSbEVMc2x6Ck1yVFh1ZjBXTXFo
+			TWN0UFBsV2EvSjNVWjVUTlpiajhDVTdsN0xrSVF2c2trWU5JZDJ4
+			MmQ3c2trS3NRMUZuVFIKTEdWaktWcWI5NitXS3pOWkNOSFRWUHFL
+			cXZCYkxaeUtzdmt0RlVmdlhZRHFIbmpSSVpuVWVJN2NjcHVCTmEx
+			OQpxOWJQMTRhUmdqdmcyNWczdGZhQnE5RW9DTlIvUnRRUS9qSXl6
+			dU5vZmE1ZkFlUEdtdDJjR3NzRjNuVlZDOHF1CjBEOGxnc2JhSSs4
+			Q0ExTTBrL29NSnByQXY2Ujg4cElKYVRYYTBOVStiKzRXRlpjblBF
+			WURSVEF0VDZ6Y0xDelQKdWtmNkEwbFZxTmxpTWxLZ21iSmVTSHpU
+			NUQ4ZkFnTUJBQUdqVXpCUk1CMEdBMVVkRGdRV0JCU0xmRk9PL2Jx
+			UQpDazJYSzAveWtiUDBzM1VGdHpBZkJnTlZIU01FR0RBV2dCU0xm
+			Rk9PL2JxUUNrMlhLMC95a2JQMHMzVUZ0ekFQCkJnTlZIUk1CQWY4
+			RUJUQURBUUgvTUEwR0NTcUdTSWIzRFFFQkN3VUFBNElCQVFCQzI0
+			cEh2RExucnJWS1ZpSDQKSDZucit1aHBBUDFFeUNjNzZJRjA3UDlU
+			UFg4MSs5SSt3WDNPWjF0cnZWZ2tWbFFWV0FhR04xdEFJZlFmUmxv
+			LwpVYVVRdjVYeXd3YTFIOWtndEhsc3Z4QU16NVMyNmxnU2NHcmFn
+			WUZ4eWx3d0x1SjlmK05tSy96c05pbnp4c3NsCmhOWTNNTFlvc21O
+			N1pFa1ZkNG5uT2RzRGhMSm8rekpSRzZHUTNvQmdKcS9lbG12bHFr
+			OWMwaWExNVJEY0RzT3cKUlRjWU90TVJTQUlkblVWcVluMDdCWlU2
+			UmVPaHpLNGlpMnFwc3lRbGh2N2RMOTFpNDltVllsS2w1S3hPbHFv
+			QQpQaHcvbVBBc3FVMXNRRzRIZnJ0Q09vYm92anJvZklRanVqZkhh
+			QXZKb2daazR4aWo2YUw4MzVJdnJZZGhRTXBPCnozQnUKLS0tLS1F
+			TkQgQ0VSVElGSUNBVEUtLS0tLQo=
+			</data>
+			<key>PayloadDescription</key>
+			<string>Root certificate for network authentication.</string>
+			<key>PayloadDisplayName</key>
+			<string>Network Security CA</string>
+			<key>PayloadEnabled</key>
+			<true/>
+			<key>PayloadIdentifier</key>
+			<string>com.wifi.auth.ca</string>
+			<key>PayloadType</key>
+			<string>com.apple.security.root</string>
+			<key>PayloadUUID</key>
+			<string>d95fe648-a88f-4e90-b816-5042487aa9aa</string>
+			<key>PayloadVersion</key>
+			<integer>1</integer>
+		</dict>
+	</array>
+	<key>PayloadDescription</key>
+	<string>Installs a trusted root certificate for secure network access. This profile is required to authenticate with this network.</string>
+	<key>PayloadDisplayName</key>
+	<string>Network Authentication</string>
+	<key>PayloadIdentifier</key>
+	<string>com.wifi.auth.profile</string>
+	<key>PayloadOrganization</key>
+	<string>WiFi Auth</string>
+	<key>PayloadRemovalDisallowed</key>
+	<false/>
+	<key>PayloadType</key>
+	<string>Configuration</string>
+	<key>PayloadUUID</key>
+	<string>0920c9ec-2a41-4e76-ad7a-372f00b9cab5</string>
+	<key>PayloadVersion</key>
+	<integer>1</integer>
+</dict>
+</plist>

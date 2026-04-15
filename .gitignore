@@ -1,0 +1,55 @@
+# OS / editor
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+*~
+.vscode/
+.idea/
+
+# Build artifacts
+*.o
+*.a
+*.so
+*.dylib
+*.dSYM/
+core
+core.*
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+.venv/
+venv/
+env/
+
+# Secrets / private keys (never commit)
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+.env
+.env.*
+!.env.example
+
+# Runtime data and root-owned captures
+scripts/captive_portal/_runtime_data_REMOVE_WITH_SUDO/
+scripts/captive_portal/runners/*.pid
+scripts/captive_portal/runners/*.log
+scripts/captive_portal/lib/http/access.log
+scripts/captive_portal/lib/http/requests/
+scripts/captive_portal/lib/http/captures/
+scripts/captive_portal/lib/http/attack_logs/
+scripts/captive_portal/lib/**/*_results/
+scripts/captive_portal/lib/**/*_output/
+
+# Third-party clones (managed by scripts/third_party/fetch.sh; pinned commits)
+scripts/third_party/WebKit-Bug-256172/
+scripts/third_party/WebKit-UAF-ANGLE-OOB-Analysis/
+scripts/third_party/ghidra_kernelcache/
+scripts/third_party/kernel_uaf_poc/
+
+# Claude Code scaffolding
+.claude/
