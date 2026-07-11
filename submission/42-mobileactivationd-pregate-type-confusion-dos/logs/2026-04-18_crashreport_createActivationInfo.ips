@@ -1,0 +1,166 @@
+{"app_name":"mobileactivationd","timestamp":"2026-04-18 17:56:57.00 +0200","app_version":"","slice_uuid":"2809a69d-476b-3c35-bb96-c4140896ff3b","build_version":"","platform":1,"share_with_app_devs":0,"is_first_party":1,"bug_type":"309","os_version":"macOS 13.7.8 (22H730)","roots_installed":0,"incident_id":"C1F0F377-88CB-4F6B-892F-3C486B182D7C","name":"mobileactivationd"}
+{
+  "uptime" : 19000,
+  "procRole" : "Unspecified",
+  "version" : 2,
+  "userID" : 0,
+  "deployVersion" : 210,
+  "modelCode" : "MacBookPro14,1",
+  "coalitionID" : 831,
+  "osVersion" : {
+    "train" : "macOS 13.7.8",
+    "build" : "22H730",
+    "releaseType" : "User"
+  },
+  "captureTime" : "2026-04-18 17:56:50.6949 +0200",
+  "incident" : "C1F0F377-88CB-4F6B-892F-3C486B182D7C",
+  "pid" : 825,
+  "cpuType" : "X86-64",
+  "roots_installed" : 0,
+  "bug_type" : "309",
+  "procLaunch" : "2026-04-18 12:38:15.5869 +0200",
+  "procStartAbsTime" : 224119349519,
+  "procExitAbsTime" : 19326798683537,
+  "procName" : "mobileactivationd",
+  "procPath" : "\/usr\/libexec\/mobileactivationd",
+  "parentProc" : "launchd",
+  "parentPid" : 1,
+  "coalitionName" : "com.apple.mobileactivationd",
+  "crashReporterKey" : "5BEED629-EA55-855F-124F-BCF2AB051126",
+  "throttleTimeout" : 10,
+  "codeSigningID" : "com.apple.mobileactivationd",
+  "codeSigningTeamID" : "",
+  "codeSigningFlags" : 570522385,
+  "codeSigningValidationCategory" : 1,
+  "codeSigningTrustLevel" : 0,
+  "wakeTime" : 17143,
+  "sleepWakeUUID" : "5765DB2E-A3C5-4E08-9990-87F1939DF86F",
+  "sip" : "enabled",
+  "exception" : {"codes":"0x0000000000000000, 0x0000000000000000","rawCodes":[0,0],"type":"EXC_CRASH","signal":"SIGABRT"},
+  "termination" : {"flags":0,"code":6,"namespace":"SIGNAL","indicator":"Abort trap: 6","byProc":"mobileactivationd","byPid":825},
+  "asi" : {"libsystem_c.dylib":["abort() called"]},
+  "asiBacktraces" : ["0   CoreFoundation                      0x00007ff80a0510aa __exceptionPreprocess + 242\n1   libobjc.A.dylib                     0x00007ff809b760b7 objc_exception_throw + 48\n2   CoreFoundation                      0x00007ff80a0ecf7f -[NSObject(NSObject) __retain_OA] + 0\n3   CoreFoundation                      0x00007ff809fbc6c9 ___forwarding___ + 1392\n4   CoreFoundation                      0x00007ff809fbc0c8 _CF_forwarding_prep_0 + 120\n5   mobileactivationd                   0x0000000109bbbc30 mobileactivationd + 80944\n6   Foundation                          0x00007ff80ae70e49 __NSXPCCONNECTION_IS_CALLING_OUT_TO_EXPORTED_OBJECT_S2__ + 10\n7   Foundation                          0x00007ff80b494225 -[NSXPCConnection _decodeAndInvokeMessageWithEvent:reply:flags:] + 2260\n8   Foundation                          0x00007ff80b4959d8 message_handler_message + 79\n9   Foundation                          0x00007ff80b4954f5 message_handler + 140\n10  libxpc.dylib                        0x00007ff809c46998 _xpc_connection_call_event_handler + 56\n11  libxpc.dylib                        0x00007ff809c4574c _xpc_connection_mach_event + 1399\n12  libdispatch.dylib                   0x00007ff809d5d0cd _dispatch_client_callout4 + 9\n13  libdispatch.dylib                   0x00007ff809d771a7 _dispatch_mach_msg_invoke + 455\n14  libdispatch.dylib                   0x00007ff809d63088 _dispatch_lane_serial_drain + 393\n15  libdispatch.dylib                   0x00007ff809d77cd4 _dispatch_mach_invoke + 484\n16  libdispatch.dylib                   0x00007ff809d63088 _dispatch_lane_serial_drain + 393\n17  libdispatch.dylib                   0x00007ff809d63d6c _dispatch_lane_invoke + 417\n18  libdispatch.dylib                   0x00007ff809d6e3fc _dispatch_workloop_worker_thread + 765\n19  libsystem_pthread.dylib             0x00007ff809efac55 _pthread_wqthread + 327\n20  libsystem_pthread.dylib             0x00007ff809ef9bbf start_wqthread + 15"],
+  "extMods" : {"caller":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"system":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"targeted":{"thread_create":0,"thread_set_state":0,"task_for_pid":0},"warnings":0},
+  "lastExceptionBacktrace" : [{"imageOffset":999578,"symbol":"__exceptionPreprocess","symbolLocation":226,"imageIndex":2},{"imageOffset":86199,"symbol":"objc_exception_throw","symbolLocation":48,"imageIndex":7},{"imageOffset":1638271,"symbol":"-[NSObject(NSObject) __retain_OA]","symbolLocation":0,"imageIndex":2},{"imageOffset":390857,"symbol":"___forwarding___","symbolLocation":1392,"imageIndex":2},{"imageOffset":389320,"symbol":"_CF_forwarding_prep_0","symbolLocation":120,"imageIndex":2},{"imageOffset":80944,"imageIndex":0},{"imageOffset":433737,"symbol":"__NSXPCCONNECTION_IS_CALLING_OUT_TO_EXPORTED_OBJECT_S2__","symbolLocation":10,"imageIndex":9},{"imageOffset":6869541,"symbol":"-[NSXPCConnection _decodeAndInvokeMessageWithEvent:reply:flags:]","symbolLocation":2260,"imageIndex":9},{"imageOffset":6875608,"symbol":"message_handler_message","symbolLocation":79,"imageIndex":9},{"imageOffset":6874357,"symbol":"message_handler","symbolLocation":140,"imageIndex":9},{"imageOffset":51608,"symbol":"_xpc_connection_call_event_handler","symbolLocation":56,"imageIndex":10},{"imageOffset":46924,"symbol":"_xpc_connection_mach_event","symbolLocation":1399,"imageIndex":10},{"imageOffset":12493,"symbol":"_dispatch_client_callout4","symbolLocation":9,"imageIndex":8},{"imageOffset":119207,"symbol":"_dispatch_mach_msg_invoke","symbolLocation":455,"imageIndex":8},{"imageOffset":37000,"symbol":"_dispatch_lane_serial_drain","symbolLocation":393,"imageIndex":8},{"imageOffset":122068,"symbol":"_dispatch_mach_invoke","symbolLocation":484,"imageIndex":8},{"imageOffset":37000,"symbol":"_dispatch_lane_serial_drain","symbolLocation":393,"imageIndex":8},{"imageOffset":40300,"symbol":"_dispatch_lane_invoke","symbolLocation":417,"imageIndex":8},{"imageOffset":82940,"symbol":"_dispatch_workloop_worker_thread","symbolLocation":765,"imageIndex":8},{"imageOffset":11349,"symbol":"_pthread_wqthread","symbolLocation":327,"imageIndex":4},{"imageOffset":7103,"symbol":"start_wqthread","symbolLocation":15,"imageIndex":4}],
+  "faultingThread" : 1,
+  "threads" : [{"id":8928,"queue":"com.apple.main-thread","frames":[{"imageOffset":5458,"symbol":"mach_msg2_trap","symbolLocation":10,"imageIndex":1},{"imageOffset":63181,"symbol":"mach_msg2_internal","symbolLocation":78,"imageIndex":1},{"imageOffset":34180,"symbol":"mach_msg_overwrite","symbolLocation":692,"imageIndex":1},{"imageOffset":6202,"symbol":"mach_msg","symbolLocation":19,"imageIndex":1},{"imageOffset":511887,"symbol":"__CFRunLoopServiceMachPort","symbolLocation":145,"imageIndex":2},{"imageOffset":506384,"symbol":"__CFRunLoopRun","symbolLocation":1365,"imageIndex":2},{"imageOffset":503377,"symbol":"CFRunLoopRunSpecific","symbolLocation":560,"imageIndex":2},{"imageOffset":1041781,"symbol":"CFRunLoopRun","symbolLocation":40,"imageIndex":2},{"imageOffset":120813,"imageIndex":0},{"imageOffset":25624,"symbol":"start","symbolLocation":1896,"imageIndex":3}]},{"triggered":true,"id":255642,"threadState":{"r13":{"value":206158430216},"rax":{"value":0},"rflags":{"value":582},"cpu":{"value":0},"r14":{"value":6},"rsi":{"value":6},"r8":{"value":123145343537904},"cr2":{"value":0},"rdx":{"value":0},"r10":{"value":0},"r9":{"value":140703295059753},"r15":{"value":22},"rbx":{"value":123145343541248},"trap":{"value":133},"err":{"value":33554760},"r11":{"value":582},"rip":{"value":140703295103382,"matchesCrashFrame":1},"rbp":{"value":123145343538256},"rsp":{"value":123145343538216},"r12":{"value":21587},"rcx":{"value":123145343538216},"flavor":"x86_THREAD_STATE","rdi":{"value":21587}},"queue":"com.apple.mobileactivationd","frames":[{"imageOffset":33174,"symbol":"__pthread_kill","symbolLocation":10,"imageIndex":1},{"imageOffset":24294,"symbol":"pthread_kill","symbolLocation":263,"imageIndex":4},{"imageOffset":523077,"symbol":"abort","symbolLocation":123,"imageIndex":5},{"imageOffset":62082,"symbol":"abort_message","symbolLocation":241,"imageIndex":6},{"imageOffset":5115,"symbol":"demangling_terminate_handler()","symbolLocation":267,"imageIndex":6},{"imageOffset":116682,"symbol":"_objc_terminate()","symbolLocation":96,"imageIndex":7},{"imageOffset":59099,"symbol":"std::__terminate(void (*)())","symbolLocation":6,"imageIndex":6},{"imageOffset":59030,"symbol":"std::terminate()","symbolLocation":54,"imageIndex":6},{"imageOffset":12513,"symbol":"_dispatch_client_callout4","symbolLocation":29,"imageIndex":8},{"imageOffset":119207,"symbol":"_dispatch_mach_msg_invoke","symbolLocation":455,"imageIndex":8},{"imageOffset":37000,"symbol":"_dispatch_lane_serial_drain","symbolLocation":393,"imageIndex":8},{"imageOffset":122068,"symbol":"_dispatch_mach_invoke","symbolLocation":484,"imageIndex":8},{"imageOffset":37000,"symbol":"_dispatch_lane_serial_drain","symbolLocation":393,"imageIndex":8},{"imageOffset":40300,"symbol":"_dispatch_lane_invoke","symbolLocation":417,"imageIndex":8},{"imageOffset":82940,"symbol":"_dispatch_workloop_worker_thread","symbolLocation":765,"imageIndex":8},{"imageOffset":11349,"symbol":"_pthread_wqthread","symbolLocation":327,"imageIndex":4},{"imageOffset":7103,"symbol":"start_wqthread","symbolLocation":15,"imageIndex":4}]},{"id":274390,"frames":[{"imageOffset":7088,"symbol":"start_wqthread","symbolLocation":0,"imageIndex":4}]}],
+  "usedImages" : [
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 4458184704,
+    "size" : 245760,
+    "uuid" : "2809a69d-476b-3c35-bb96-c4140896ff3b",
+    "path" : "\/usr\/libexec\/mobileactivationd",
+    "name" : "mobileactivationd"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703295070208,
+    "size" : 237568,
+    "uuid" : "63cb5121-a5d1-3741-8568-69a9d17bd10d",
+    "path" : "\/usr\/lib\/system\/libsystem_kernel.dylib",
+    "name" : "libsystem_kernel.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64h",
+    "base" : 140703295721472,
+    "CFBundleShortVersionString" : "6.9",
+    "CFBundleIdentifier" : "com.apple.CoreFoundation",
+    "size" : 4837376,
+    "uuid" : "7d784f30-bee3-30c1-8247-a01d90a9bd8e",
+    "path" : "\/System\/Library\/Frameworks\/CoreFoundation.framework\/Versions\/A\/CoreFoundation",
+    "name" : "CoreFoundation",
+    "CFBundleVersion" : "1979.104.902"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703291789312,
+    "size" : 624176,
+    "uuid" : "30314c55-d8f5-398e-b837-1b1760596c7f",
+    "path" : "\/usr\/lib\/dyld",
+    "name" : "dyld"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703295307776,
+    "size" : 49152,
+    "uuid" : "51a43b06-feb4-3836-9e4f-21b69bb13726",
+    "path" : "\/usr\/lib\/system\/libsystem_pthread.dylib",
+    "name" : "libsystem_pthread.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703293919232,
+    "size" : 557048,
+    "uuid" : "77738df4-82b8-3690-937e-cc1d4981a630",
+    "path" : "\/usr\/lib\/system\/libsystem_c.dylib",
+    "name" : "libsystem_c.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703294984192,
+    "size" : 86004,
+    "uuid" : "717bce6c-23b4-31dc-9d8b-6859639a38d5",
+    "path" : "\/usr\/lib\/libc++abi.dylib",
+    "name" : "libc++abi.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64h",
+    "base" : 140703291543552,
+    "size" : 245753,
+    "uuid" : "eca9b165-074c-38aa-9425-f75d13e69d17",
+    "path" : "\/usr\/lib\/libobjc.A.dylib",
+    "name" : "libobjc.A.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703293612032,
+    "size" : 294900,
+    "uuid" : "41ebdd82-a707-34d3-8cd1-ec1503b37324",
+    "path" : "\/usr\/lib\/system\/libdispatch.dylib",
+    "name" : "libdispatch.dylib"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703311097856,
+    "CFBundleShortVersionString" : "6.9",
+    "CFBundleIdentifier" : "com.apple.Foundation",
+    "size" : 9998322,
+    "uuid" : "f962eed3-9d18-3e45-9da2-b1e3529053e1",
+    "path" : "\/System\/Library\/Frameworks\/Foundation.framework\/Versions\/C\/Foundation",
+    "name" : "Foundation",
+    "CFBundleVersion" : "1979.104.902"
+  },
+  {
+    "source" : "P",
+    "arch" : "x86_64",
+    "base" : 140703292432384,
+    "size" : 266233,
+    "uuid" : "3060cd54-611f-3b61-8f9e-6ba7d700fa89",
+    "path" : "\/usr\/lib\/system\/libxpc.dylib",
+    "name" : "libxpc.dylib"
+  }
+],
+  "sharedCache" : {
+  "base" : 140703291166720,
+  "size" : 21474836480,
+  "uuid" : "8eee6686-4d40-33a3-b07b-b334fd3e3ecc"
+},
+  "vmSummary" : "ReadOnly portion of Libraries: Total=368.5M resident=0K(0%) swapped_out_or_unallocated=368.5M(100%)\nWritable regions: Total=81.8M written=0K(0%) resident=0K(0%) swapped_out=0K(0%) unallocated=81.8M(100%)\n\n                                VIRTUAL   REGION \nREGION TYPE                        SIZE    COUNT (non-coalesced) \n===========                     =======  ======= \nActivity Tracing                   256K        1 \nDispatch continuations            32.0M        1 \nFoundation                        3280K        1 \nKernel Alloc Once                    8K        1 \nMALLOC                            37.1M       15 \nMALLOC guard page                   16K        4 \nSTACK GUARD                       56.0M        3 \nStack                             9232K        3 \nVM_ALLOCATE                          4K        1 \n__CTF                               824        1 \n__DATA                            12.1M      265 \n__DATA_CONST                      10.0M      163 \n__DATA_DIRTY                       433K       92 \n__FONT_DATA                        2352        1 \n__LINKEDIT                       170.9M        2 \n__OBJC_RO                         66.3M        1 \n__OBJC_RW                         2013K        2 \n__TEXT                           197.6M      283 \ndyld private memory                260K        2 \nmapped file                         52K        1 \nshared memory                       44K        5 \n===========                     =======  ======= \nTOTAL                            597.3M      848 \n",
+  "legacyInfo" : {
+  "threadTriggered" : {
+    "queue" : "com.apple.mobileactivationd"
+  }
+},
+  "logWritingSignature" : "a6fa64523242d5745ac2179176700581d43e29f3"
+}

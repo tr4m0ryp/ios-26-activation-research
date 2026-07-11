@@ -1,0 +1,4 @@
+2026-04-18 18:15:11.734 poc[61442:290192] [before] mobileactivationd pid=58820
+2026-04-18 18:15:16.738 poc[61442:290234] [xpc] connection invalidated (daemon likely crashed)
+2026-04-18 18:15:18.272 poc[61442:290192] [after ] mobileactivationd pid=-1
+2026-04-18 18:15:18.272 poc[61442:290192] NOT CONFIRMED on this hardware/build. Check daemon pid manually and ~/Library/Logs/DiagnosticReports/

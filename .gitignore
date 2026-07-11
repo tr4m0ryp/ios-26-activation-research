@@ -51,5 +51,11 @@ scripts/third_party/WebKit-UAF-ANGLE-OOB-Analysis/
 scripts/third_party/ghidra_kernelcache/
 scripts/third_party/kernel_uaf_poc/
 
+# apple_bug_bounty autonomous loop -- state and raw output (do not publish pre-disclosure)
+scripts/apple_bug_bounty/state/
+scripts/apple_bug_bounty/cycles/
+scripts/apple_bug_bounty/extracted/
+scripts/apple_bug_bounty/diffs/
+
 # Claude Code scaffolding
 .claude/

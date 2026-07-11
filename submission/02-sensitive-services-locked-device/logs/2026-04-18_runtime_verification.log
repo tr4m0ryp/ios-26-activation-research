@@ -1,0 +1,26 @@
+Runtime Verification Log -- Finding #02
+Generated: 2026-04-18T13:08:36Z
+Tool: scripts/exploit_tests/tools/run_all_findings.py
+Device: iPhone16,1 iOS 26.3 (23D127)
+UDID: 00008130-000C219A0206001C
+
+Test: test_02_services
+Result: CONFIRMED
+Evidence: Reachable on locked device: pcapd, syslog_relay, afc, os_trace_relay, notification_proxy
+
+Services confirmed accessible (no pairing, no auth):
+  com.apple.pcapd                      OPEN
+  com.apple.syslog_relay               OPEN
+  com.apple.afc                        OPEN
+  com.apple.os_trace_relay             OPEN
+  com.apple.mobile.notification_proxy  OPEN
+
+Services correctly blocked:
+  com.apple.afc2                       BLOCKED (InvalidService)
+  com.apple.webinspector               BLOCKED (InvalidService)
+  com.apple.mobile.installation_proxy  BLOCKED (InvalidService)
+
+Baseline: mobileactivationd CONFIRMED reachable; ActivationState=Unactivated
+
+Note: diagnostics_relay not in run_all_findings.py test (separate confirmation
+      from prior AFC + service enumeration testing, 2026-04-05).

@@ -1,0 +1,48 @@
+Runtime Verification Log -- Finding #40
+Tool: apple_bb:loop cycle-009 (gate mapping) + cycle-010 (live XPC probe)
+Platform: macOS 14+ (MobileActivation-834.140.3.701.1)
+Hardware: pre-T2 Intel Mac
+
+Cycle-009: IMP-to-gate mapping (17 methods against isEntitled: selref 0x100045dd8)
+-----------------------------------------------------------------------
+Method                                               Gate present
+issueDCRT:completion:                                YES
+copyDCRT:completion:                                 YES
+getActivationState:completion:                       YES
+activate:completion:                                 YES
+deactivate:completion:                               YES
+copyActivationRecord:completion:                     YES
+copyActivationState:completion:                      YES
+copyDeviceInfo:completion:                           YES
+copyBAAInfo:completion:                              YES
+copyUCRT:completion:                                 YES
+issueDCRTWithOptions:completion:                     YES
+copyDCRTWithOptions:completion:                      YES
+copyLocalPolicy:completion:                          YES
+copyAttestationDictionaryWithCompletionBlock:        NO  <-- VULNERABLE
+copyAutomaticTimeEnabledWithCompletion:              NO  (harmless getter)
+copyRTCResetCountWithCompletionBlock:                NO  (harmless getter)
+copyMonotonicClockWithCompletionBlock:               NO  (harmless getter)
+
+Listener IMP 0x10000ed0b: unconditionally returns YES (no connection-level gate)
+
+Cycle-010: live XPC probe (pre-T2 Intel Mac, attestation hardware absent)
+-----------------------------------------------------------------------
+copyAttestationDictionary (UNGATED):
+  Error code: -1
+  Description: "Invalid input(s)" (domain: com.apple.MobileActivation.ErrorDomain)
+  Interpretation: method body EXECUTED, reached create_baa_info_macos input validation
+
+getActivationState (GATED control):
+  Error code: -3
+  Description: "Not supported on this device"
+  Interpretation: hardware-support check pre-empts entitlement check on pre-T2
+
+KEY EVIDENCE: different error codes (-1 vs -3) prove copyAttestationDictionary
+executes deeper into its logic than gated methods. On T2/Apple Silicon hardware
+where attestation is present, the method would return the full attestation dict.
+
+all_findings_status.md entry (2026-04-18):
+  #40  CONFIRMED  Ungated copyAttestationDictionaryWithCompletionBlock on macOS
+                  mobileactivationd; 4/17 XPC methods skip entitlement check;
+                  runtime-confirmed via probe (cycle-009 + cycle-010)

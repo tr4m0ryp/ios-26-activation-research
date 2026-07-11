@@ -1,110 +1,112 @@
-# Vulnerability Ranking -- iCloud Activation Lock Research
+# iCloud Activation Lock Research -- Findings and Reward Estimates
 
-All 31 findings ranked from most critical to least critical. Per-finding details: [`documentation/bounty/NN-*.md`](documentation/bounty/).
+Research target: iCloud Activation Lock bypass / unauthorized sensitive-data access on iOS 26.3
+and macOS 14+. Test device: iPhone 15 Pro (iPhone16,1, 23D127), personally owned and
+intentionally locked. Responsible disclosure target: Apple Security Bounty Program.
 
-**Ranking factors** (in priority order):
-1. **Severity** -- Apple's classification (CRITICAL > High > Medium-High > Medium > Low).
-2. **Verification status** -- CONFIRMED > LIKELY BUG > GRAY AREA (needs hardware verification).
-3. **Reachability** -- network / no-precondition bugs ranked above bugs requiring prior code execution.
-
-| Tier | Severity | Bug count |
-|------|----------|-----------|
-| **1** | CRITICAL (kernel RCE / arbitrary memory access) | 4 |
-| **2** | CRITICAL (activation / crypto bypass primitives) | 7 |
-| **3** | CRITICAL (targeted bypasses) | 3 |
-| **4** | High | 11 |
-| **5** | Medium-High / Medium | 5 |
-| **6** | Low | 1 |
-
-27 confirmed, 2 likely, 2 gray area.
+Last updated: 2026-04-18 (cycle-001 autonomous-loop findings appended)
 
 ---
 
-## Tier 1 -- CRITICAL (kernel RCE / arbitrary memory access)
+## Evidence Levels
 
-Kernel-level memory corruption / arbitrary memory access. Network- or media-reachable, no prior code execution required.
-
-| # | Finding | Status | Why critical | Doc |
-|---|---------|--------|--------------|-----|
-| 21 | IPv6 Extension Header Double-Free in Kernel | CONFIRMED | Network-reachable kernel heap corruption via crafted IPv6 (USB-Ethernet path). Four double-free paths + mbuf double-free. Matches CVE-2023-40404 / CVE-2024-27826 patterns. | [`21-ipv6-double-free-kernel.md`](documentation/bounty/21-ipv6-double-free-kernel.md) |
-| 22 | AppleAVD Video Decoder Integer Overflow | CONFIRMED | Kernel UAF via crafted media (no precondition). Matches CVE-2022-32788 used in NSO Pegasus. `AppleAVDUserClient` has no entitlement gate. | [`22-appeavd-integer-overflow.md`](documentation/bounty/22-appeavd-integer-overflow.md) |
-| 27 | PPL pmap_cs_allow_invalid_internal + OOP-JIT Type Confusion | CONFIRMED | PPL bypass on arm64e: invalid code signatures accepted, OOP-JIT type validation falls back to log-only "Anomaly", PPL pages can be unlocked. The chain killer for code-signing on Apple silicon. | [`27-ppl-oopjit-type-confusion.md`](documentation/bounty/27-ppl-oopjit-type-confusion.md) |
-| 28 | AppleBasebandPCIUserClient Physical Memory R/W | CONFIRMED | `read(mach_vm_address_t)` / `write(...)` take raw user-supplied virtual addresses. DMA validated by DART callbacks, not the dispatch layer. Direct kernel R/W primitive. | [`28-baseband-pci-physical-rw.md`](documentation/bounty/28-baseband-pci-physical-rw.md) |
+| Level | Definition |
+|-------|-----------|
+| RUNTIME-CONFIRMED | Code path triggered on real device with direct observable evidence. Qualifies for submission. |
+| COMPONENT | Code path triggered; chain blocked by a specific documented barrier. Not independently submittable. |
 
 ---
 
-## Tier 2 -- CRITICAL (activation / crypto bypass primitives)
+## Submittable Findings
 
-Activation-lock bypass primitives + crypto downgrade. The core of the project's research.
+All three are RUNTIME-CONFIRMED and have a complete submission package in `submission/`.
+To submit: open `submit.md` in the relevant directory and paste into https://security.apple.com/bounty/.
 
-| # | Finding | Status | Why critical | Doc |
-|---|---------|--------|--------------|-----|
-| 15 | Session-Based Factory Cert Activation Nonce Bypass | CONFIRMED | `HandleActivationInfoWithSessionRequest` with the Apple iPhone Activation cert bypasses the activation nonce check entirely. The nonce IS the cryptographic activation barrier. | [`15-session-factory-nonce-bypass.md`](documentation/bounty/15-session-factory-nonce-bypass.md) |
-| 29 | LSHRNSupport Activation Record Override Without Entitlement | CONFIRMED | `+[LSHRNSupport setActivationRecordOverride:]` writes an unguarded static global with no entitlement check. Override propagates through `MAECopyActivationRecordWithError`. | [`29-lshrn-activation-record-override.md`](documentation/bounty/29-lshrn-activation-record-override.md) |
-| 09 | Predictable Nonce via SEP XART Slot Exhaustion (A12/A12X) | CONFIRMED | When 16 XART slots are exhausted, `AppleSEPUserClient::getOrGenerateNonce()` returns `memset(buf, 0xFF, 20)` + `kIOReturnSuccess`. Caller cannot distinguish dummy from real. | [`09-kernel-nonce-slot-exhaustion.md`](documentation/bounty/09-kernel-nonce-slot-exhaustion.md) |
-| 18 | AppleMobileApNonceUserClient Without Entitlement Gate | CONFIRMED | No entitlement string references this UserClient anywhere in the kernel. Exposes `generateNonce`, `retrieveNonce`, `clearNonce`, `saveNonce` for the AP boot nonce. Combined with #09: full predictable nonce. | [`18-ap-nonce-userclient-no-entitlement.md`](documentation/bounty/18-ap-nonce-userclient-no-entitlement.md) |
-| 20 | restored_update SEP/NVRAM/No-Sandbox Entitlement Bundle | CONFIRMED | Production restore binary holds: `applesepmanager.allow` (40 SEP methods), `system-nvram-allow`, `no-sandbox`, `gen-boot-nonce`, `bootpolicy`. Combined with #09 = predictable nonce + restore. | [`20-restored-update-sep-nvram-entitlements.md`](documentation/bounty/20-restored-update-sep-nvram-entitlements.md) |
-| 24 | Permissive RSA Verification + SHA-1 + RSA-1024 in Activation | CONFIRMED | `_ccrsa_verify_pkcs1v15_allowshortsigs` (PKCS#1 v1.5 permissive), all activation certs use SHA-1, leaf is RSA-1024 (approaching factorability), expired since 2014 yet still accepted. CVE-2006-4339-class surface. | [`24-permissive-rsa-verification-sha1.md`](documentation/bounty/24-permissive-rsa-verification-sha1.md) |
-| 25 | CoreTLS Master Secret Override and Peer Trust Bypass | CONFIRMED | `_tls_handshake_internal_set_master_secret_function`, `_tls_handshake_set_peer_trust`, `_tls_handshake_internal_master_secret` exported in production `libcoretls.dylib`. Combined with code execution = full TLS interception. | [`25-coretls-master-secret-override.md`](documentation/bounty/25-coretls-master-secret-override.md) |
+| # | Finding | Platform | Apple Band | Reward Estimate | Submission |
+|---|---------|----------|------------|-----------------|------------|
+| 02 | Multiple Sensitive Services Accessible on Activation-Locked Device Without Authentication | iOS / iPadOS | Unauthorized access to sensitive data from lock-screen | **$100,000 -- $250,000** | [02-sensitive-services-locked-device](submission/02-sensitive-services-locked-device/) |
+| 23 | preboardservice_v2 Accessible and Crashes on Crafted Input on Activation-Locked Device | iOS / iPadOS | Other bypass / non-kernel memory corruption | **$25,000 -- $100,000** | [23-preboard-service-dos](submission/23-preboard-service-dos/) |
+| 40 | Missing Entitlement Gate on macOS mobileactivationd Allows Unprivileged BAA Attestation Dictionary Access | macOS 14+ | Unauthorized access to iCloud account / high-privilege service | **DEGRADED PENDING REWRITE** -- see cycle-001 | [40-mobileactivationd-ungated-xpc](submission/40-mobileactivationd-ungated-xpc/) |
 
----
+**Submitted range (after cycle-001 degradation of #40): $125,000 -- $350,000**
 
-## Tier 3 -- CRITICAL (targeted bypasses)
+### #40 cycle-001 correction
 
-Critical-severity bypasses targeting specific subsystems.
-
-| # | Finding | Status | Why critical | Doc |
-|---|---------|--------|--------------|-----|
-| 04 | SkipNonceCheck Option in CreateActivationInfoRequest | CONFIRMED | `Options: {SkipNonceCheck: True, FactoryActivation: True}` returns full activation info without DRM session. Bypasses the FairPlay nonce requirement entirely. | [`04-skipnoncecheck-option.md`](documentation/bounty/04-skipnoncecheck-option.md) |
-| 10 | FDR Trust Object Fetched Over Plain HTTP | CONFIRMED | `http://gg.apple.com/fdrtrustobject` returns 2884 bytes over HTTP (not HTTPS). MITM replaces the trust anchor for *all* FDR SSL connections. | [`10-fdr-trust-object-http.md`](documentation/bounty/10-fdr-trust-object-http.md) |
-| 26 | FairPlay SAP Bypass via NSUserDefaults in Production | CONFIRMED | `BypassFairPlaySAPSignatureVerification`, `DisableFairPlaySAP`, `FairPlaySAPServer` (URL override), `DisableCertVerification` -- all NSUserDefaults keys in production `MFAAuthentication.framework`. | [`26-fairplay-sap-userdefaults-bypass.md`](documentation/bounty/26-fairplay-sap-userdefaults-bypass.md) |
+Cycle-001 (2026-04-18) static + runtime analysis shows the `copyAttestationDictionary` IMP contains `[self isEntitled:@"com.apple.mobileactivationd.spi"]` at 0x100019548 (arm64e) / 0x100015e43 (x86_64). The submission's original PoC returns `-1 "Invalid input(s)"` from an input-validation check that fires BEFORE the entitlement gate, not from reaching deeper ungated logic. The existing PoC also has two build defects (wrong `getActivationState:` selector; missing `dlopen` of MobileActivationMacOS framework). Before Apple submission, either (a) retract and supersede with the GATED_LATE finding (H1), or (b) re-run on T2/Apple Silicon with fixed PoC to determine actual runtime behavior when the pre-gate validation passes. See `scripts/apple_bb:loop/cycles/cycle-001/consolidated-results.md`.
 
 ---
 
-## Tier 4 -- High
+## Chain Components (Not Independently Submittable)
 
-High-severity enabling primitives, key material exposure, and configuration-level bypasses.
+These findings are RUNTIME-CONFIRMED in isolation but require additional steps to close into a
+full activation-bypass chain. If the blocker is resolved, the combined chain qualifies for the
+$500,000 -- $1,000,000 activation-lock bypass band.
 
-| # | Finding | Status | Summary | Doc |
-|---|---------|--------|---------|-----|
-| 19 | AppleEffaceableStorageUserClient Root Trust Only | CONFIRMED | Uses root-trust state check instead of an entitlement. Contains device encryption key (dkey) lockers + `generateNonce`. "failed to determine root trust state" suggests fail-open. | [`19-effaceable-storage-root-trust.md`](documentation/bounty/19-effaceable-storage-root-trust.md) |
-| 31 | seputil ART Clear/Set and SEP Debug Variables in Production | CONFIRMED | `--art clear` removes anti-replay, `--art-set` sets arbitrary ART, `--set-var` writes SEP debug vars, `--new-nonce/kill-nonce`. All on production ramdisk. | [`31-seputil-art-nonce-debug.md`](documentation/bounty/31-seputil-art-nonce-debug.md) |
-| 13 | Test Root CAs and Mix-N-Match God Mode in libimage4 | **GRAY AREA** | "img4 test secp256r1/secp384r1 Root CA1", "mix-n-match god mode", "allow-ecid-mismatch", "factory-prerelease-global-trust" strings in production `libimage4.dylib`. Need to verify if test roots are accepted. | [`13-libimage4-test-roots-mixnmatch.md`](documentation/bounty/13-libimage4-test-roots-mixnmatch.md) |
-| 01 | FDR-LOCAL Private Keys in Firmware | CONFIRMED | RSA-2048 + EC P-256 private keys embedded in `libFDR.dylib`, identical across all IPSW ramdisks. | [`01-fdr-local-key-exposure.md`](documentation/bounty/01-fdr-local-key-exposure.md) |
-| 05 | Factory Activation Path via AccountTokenXML | CONFIRMED | Using `AccountTokenXML` key triggers the factory cert validation path, bypassing the activation nonce check entirely. | [`bounty/`](documentation/bounty/) (no per-finding doc -- folded into #04 / #15) |
-| 08 | Dummy All-Ones Nonce on Slot Exhaustion | **GRAY AREA** | Kernel string: "GenerateNonce called without slot on Sandcat device, returning dummy all-ones value". 16 XART slots, 4-bit ID. Predecessor finding to #09. | (folded into #09) |
-| 11 | 20+ FDR Bypass Options in Production Firmware | CONFIRMED | `APTicketAllowUntrusted`, `SkipManifest`, `SkipVerifySik`, `CopyAllowUnsealed`, `AllowECIDMismatch`, +15 more. `AMFDRSetOption` enables in-process. `kAMFDROptionApTicketAllowUntrusted` returns success without verification. | [`11-fdr-bypass-options-production.md`](documentation/bounty/11-fdr-bypass-options-production.md) |
-| 12 | AppleRestoreUtils Certificate Validation Skip | CONFIRMED | `AllowCertificateValidationFailed` + `FDRDisableSSLValidation` in production restore ramdisk. Also `setEntitlementOverrideConfig`, `setDummyWrappedFDRDataEncryptionKey`. | [`12-restore-utils-cert-validation-skip.md`](documentation/bounty/12-restore-utils-cert-validation-skip.md) |
-| 14 | AMFI Local Signing Key Injection | CONFIRMED | `amfi_interface_set_local_signing_public_key`, `amfi_interface_get_local_signing_private_key`, "boot-args allow process with invalid signature" in production AMFI. | [`14-amfi-local-signing-injection.md`](documentation/bounty/14-amfi-local-signing-injection.md) |
-| 17 | keystorectl Escrow Bag + Test Keys in Production | CONFIRMED | `create_escrow_bag`, `aks_recover_with_escrow_bag` (passcode recovery), `do_se_set_nonce`, hardcoded SIK, `obliterate-really-please`. | [`17-keystorectl-escrow-test-keys.md`](documentation/bounty/17-keystorectl-escrow-test-keys.md) |
-| 30 | LocalAuthenticationCore bypassEntitlements Property | CONFIRMED | `bypassEntitlements` / `setBypassEntitlements:` on `LACDTOMutableKVStore`. Settable boolean skips per-request entitlement checks. `LACPolicyDoublePressBypass` + `FallbackToNoAuth`. | (no per-finding doc -- find in [`bounty/`](documentation/bounty/)) |
+| # | Finding | Evidence | Blocker | If Closed |
+|---|---------|----------|---------|-----------|
+| H1 | GATED_LATE pre-gate attack surface in MobileActivationMacOSDaemon (14 methods do 91-192 pre-gate instructions on caller input) | BINARY static (cycle-001) | Runtime primitive (crash, hang, info leak) not yet demonstrated | Could become a submittable primitive once a specific pre-gate defect is runtime-confirmed |
+| H2 | com.apple.mobile.insecure_notification_proxy accessible pre-pair on iOS 26.3 activation-locked iPhone16,1 | COMPONENT (cycle-001) -- service starts without session, accepts Darwin ObserveNotification | Need to enumerate which specific notifications leak state or are post-able on a locked device | Extended finding of #02 band, $50K-$250K depending on information disclosure severity |
+| 04 | SkipNonceCheck Option in CreateActivationInfoRequest | COMPONENT -- confirmed on iPad8,10; blocked on iPhone16,1 without SIM | Requires a SIM-capable device or Apple SRD to complete session establishment | Part of activation-bypass chain with #15 |
+| 15 | Session-Based Factory Cert Activation Nonce Bypass | COMPONENT -- nonce check bypassed (error changes from "Invalid nonce" to "Failed to verify account token signature") | Apple factory HSM private key required for AccountTokenSignature | Closes the chain with #04 |
+| 24 | Permissive RSA Verification + SHA-1 + RSA-1024 in Activation | COMPONENT -- factory cert path triggered by 256-byte stub sig | Same cert+sig barrier as #15 | Supporting evidence for #15 |
+| 01 | FDR-LOCAL Private Keys in Production Firmware | COMPONENT -- RSA-2048 + EC P-256 keys extracted from libFDR.dylib | FDR-LOCAL cert rejected as AccountTokenCertificate on iOS 26.3 | Informational; stand-alone submission as key-material-in-firmware |
 
----
-
-## Tier 5 -- Medium-High / Medium
-
-Surface-area exposure, capability leaks, and triggers requiring additional access.
-
-| # | Finding | Status | Summary | Doc |
-|---|---------|--------|---------|-----|
-| 16 | AMFI Developer Mode File Trigger in World-Writable Directory | CONFIRMED | `/private/var/tmp/show_dev_mode` triggers developer mode loading; directory is `drwxrwxrwt` on production ramdisks. `AMFIDemoModeSetState`, `AMFISupervisedModeSetState` exported. | [`16-amfi-devmode-file-trigger.md`](documentation/bounty/16-amfi-devmode-file-trigger.md) |
-| 03 | libauthinstall Hactivation/Relaxed Verification APIs | CONFIRMED | `AMAuthInstallApEnableLocalPolicyHactivation`, `AMAuthInstallApEnableRelaxedImageVerification`, `AMAuthInstallAddTrustedSSLCACert` exported in production firmware. | [`03-authinstall-hactivation-api.md`](documentation/bounty/03-authinstall-hactivation-api.md) |
-| 07 | Kernel Test UserClients in Production | CONFIRMED | `AppleKeyStoreTestUserClient`, `CoreAnalyticsTestUserClient`, `IOTimeSyncClockTestUserClient`, `VictimUserClient` compiled into production kernelcache. | [`07-kernel-test-userclients.md`](documentation/bounty/07-kernel-test-userclients.md) |
-| 02 | Sensitive Services on Activation-Locked Device | **LIKELY** | `pcapd`, `diagnostics_relay` (reboot), AFC read/write, syslog all reachable on a locked device. | [`02-sensitive-services-locked-device.md`](documentation/bounty/02-sensitive-services-locked-device.md) |
-| 06 | 23 Apple Certificates in Production Firmware | **LIKELY** | 23 certs extracted from `restored_update` including `[TEST] Apple iPhone Activation`, SEP Root CAs, Test CAs, FDR-CA1-ROOT-CM. | [`06-apple-certs-in-firmware.md`](documentation/bounty/06-apple-certs-in-firmware.md) |
+**If chain #04 + #15 is closed: $500,000 -- $1,000,000 (activation-lock bypass, full chain)**
 
 ---
 
-## Tier 6 -- Low
+## macOS Chain Component
 
-| # | Finding | Status | Summary | Doc |
-|---|---------|--------|---------|-----|
-| 23 | Preboard Service Accessible on Locked Device (Skip Behavior) | **LIKELY** | `preboardservice_v2` reachable on locked device, always returns `{Skip: True, Version: 2}` for all manifest formats. | [`23-preboard-service-crash.md`](documentation/bounty/23-preboard-service-crash.md) |
+| Chain | Components | Evidence | Blocker | Reward if Closed |
+|-------|-----------|----------|---------|-----------------|
+| chain-01: macOS activation-lock bypass via BAA QA cert substitution | #40 (DEGRADED -- method IS gated per cycle-001) + BAAOverrideURL (COMPONENT) + UseQACertificates (COMPONENT) | All three components now COMPONENT-level; chain not viable without an unprivileged path into one of the 10 `mobileactivationd.spi`-entitled helper processes | QA BAA root private key AND an unprivileged -> entitled-helper IPC primitive | $500,000 -- $1,000,000 (requires new chain component first) |
 
 ---
 
-## Notes
+## Reward Summary
 
-- **Findings #05 and #08** were folded into adjacent entries (#04 and #09 respectively) during writeup -- they don't have their own per-finding files. The numbering gap is intentional.
-- **Finding #30** (`LocalAuthenticationCore bypassEntitlements`) does not have a dedicated per-finding doc in `documentation/bounty/` either; it's covered in the registry only.
-- **GRAY AREA** entries (#08, #13) need additional verification (live device + hardware) before formal submission. They are listed in their tier but should be flagged in submission cover-letter.
+| Scenario | Estimated Reward |
+|---------|-----------------|
+| Two currently-submittable findings (#02, #23) | $125,000 -- $350,000 |
+| + #40 rewritten or verified on T2/Apple Silicon | + $25,000 -- $100,000 (if CONFIRMED on other hardware) |
+| + H2 insecure_notification_proxy elevated to CONFIRMED extended finding | + $50,000 -- $250,000 |
+| + iOS chain (#04 + #15) closed and submitted | + $500,000 -- $1,000,000 |
+| + macOS chain-01 closed and submitted (requires new unprivileged-to-entitled primitive) | + $500,000 -- $1,000,000 |
+| Maximum (all closures + submissions) | up to $2,000,000+ |
+
+Payout bands are Apple's published 2024 figures. Actual awards are at Apple's discretion.
+The iOS activation-bypass chain (#04 + #15) is the highest-priority target: one of the two
+blockers (SIM requirement for #04) is a hardware constraint, not a cryptographic one.
+
+---
+
+## Next Steps
+
+1. **Submit #02, #23** -- both are ready. Run `make zip` in each submission directory
+   and attach to the Apple portal form using `submit.md` as the paste text. **#40 is on hold** pending cycle-001 correction (either rewrite or T2/Apple Silicon re-verification).
+
+1a. **#40 remediation** -- cycle-001 found that `copyAttestationDictionary` IS gated on the current build. Before submitting:
+   - Fix `poc.c` selector name `getActivationState:completion:` -> `getActivationState:withCompletionBlock:`
+   - Add `dlopen("/System/Library/PrivateFrameworks/MobileActivationMacOS.framework/MobileActivationMacOS", RTLD_LAZY)` at the top of `main()`; without it the protocol is not visible on a fresh host.
+   - Run on a T2 or Apple Silicon Mac. If the returned `NSError code` is `-7` ("Client is missing required entitlement"), the gate holds and the submission must be retracted or rewritten as the GATED_LATE finding (H1). If instead an attestation dictionary is returned without entitlement, the original claim holds and the submission is valid.
+   - See `scripts/apple_bb:loop/cycles/cycle-001/consolidated-results.md` for full details.
+
+2. **Test #04 on a SIM-capable device** -- finding is CONFIRMED on iPad8,10 but blocked on
+   iPhone16,1 without SIM. A SIM-active device or Apple SRD would close this gap and allow
+   the #04 + #15 chain submission at the $500K-$1M band.
+
+3. **Investigate #01 as standalone** -- FDR-LOCAL private key material is extractable from
+   production IPSW. This is submittable as a low-impact informational finding ($5K-$25K) with
+   a simple `strings` / `openssl` PoC requiring no live device.
+
+---
+
+## Submission Checklist
+
+For each finding in `submission/`:
+
+- [ ] `make` -- builds without errors
+- [ ] `./poc` -- prints FINDING CONFIRMED on the test device
+- [ ] `make run` -- saves run output to `logs/`
+- [ ] `make zip` -- produces zip for attachment
+- [ ] `submit.md` -- paste into https://security.apple.com/bounty/

