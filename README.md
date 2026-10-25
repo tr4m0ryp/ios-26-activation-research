@@ -1,5 +1,9 @@
 # iOS 26 Activation Lock -- Documented Vulnerabilities
 
+<p align="center">
+  <a href="https://x.com/tr4m0ryp"><img alt="Follow on X" src="https://img.shields.io/badge/X-@tr4m0ryp-000000?logo=x&logoColor=white"></a>
+</p>
+
 Documentation repository for **31 firmware-level vulnerabilities** identified in iOS 26.3 affecting the activation lock subsystem, prepared as Apple Security Bounty submission material and published for the security research community.
 
 The repository is documentation-first: every finding has a self-contained writeup with vulnerability description, evidence, reproducer steps, and suggested patch direction. A working proof-of-concept for **VU#346053** (the unauthenticated `humb.apple.com/humbug/baa` BAA injection vector) is included as supporting material.
